@@ -35,7 +35,7 @@ try {
       while (match = spamfilterMatch.exec(text)) {
         let [capture, nick, user, host, filter, message, target] = match
 
-        if (filter === '*opsignal*') {
+        if (filter === '*opsignal*' || filter === '*opssignal*') {
           client.say('#opers', `${irc.colors.wrap('red', 'OPSIGNAL')} by ${nick} in channel/query ${target}. Original message: "${message}"`)
         } else {
           client.say('#opers', `${irc.colors.wrap('red', 'SPAMFILTER')} triggered by ${nick} in channel/query ${target}.`)
