@@ -6,8 +6,8 @@ const config = require('../config')
 const spamfilterMatch = /\[Spamfilter\] ([A-Za-z0-9_´\[\]]*)!([A-Za-z0-9_´\[\]]*)@([A-Za-z0-9._\-]*) matches filter '(.*)': \[([A-Za-z0-9]* ([A-Za-z0-9#_`\[\]]*): .*)] /gi
 
 const options = {
-  userName: 'watchdog',
-  realName: 'IRC WatchDog BOT',
+  userName: 'bot',
+  realName: 'Fuel (Rats) Inspection and Defense Operations',
   port: config.irc.port,
   autoConnect: true,
   autoRejoin: true,
@@ -17,11 +17,11 @@ const options = {
   messageSplit: 512,
   secure: true,
   password: config.irc.password,
-  channels: ['#ratchat', '#doersofstuff', '#drillrats', '#drillrats2', '#drillrats3']
+  channels: config.irc.channels
 }
 
 try {
-  const client = new irc.Client(config.irc.server, 'WatchDog[BOT]', options)
+  const client = new irc.Client(config.irc.server, config.irc.nickname, options)
   new ChannelGuard(client)
 
   client.addListener('error', (message) => {
