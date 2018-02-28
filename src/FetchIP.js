@@ -1,4 +1,5 @@
 import request from 'request'
+import emojiFlags from 'emoji-flags'
 
 
 export default class FetchIP {
@@ -34,7 +35,7 @@ export default class FetchIP {
       try {
         let data = JSON.parse(body)
 
-        this.client.say(channel, `IP Information ${data.ip}: ${data.city}, ${data.region}, ${data.country}. ISP: ${data.org}`)
+        this.client.say(channel, `IP Information ${data.ip}: ${data.city}, ${data.region}, ${data.country} ${emojiFlags.countryCode(data.country).emoji} ISP: ${data.org}`)
       } catch (ex) {
         this.client.notice(sender, 'Unable to parse IP information')
       }
