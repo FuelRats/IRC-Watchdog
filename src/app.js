@@ -1,9 +1,16 @@
 import irc from  'irc'
 import ChannelGuard from './ChannelGuard'
+import FetchIP from './FetchIP'
 
 const config = require('../config')
 
 const spamfilterMatch = /\[Spamfilter\] ([A-Za-z0-9_´\[\]]*)!([A-Za-z0-9_´\[\]]*)@([A-Za-z0-9._\-]*) matches filter '(.*)': \[([A-Za-z0-9]* ([A-Za-z0-9#_`\[\]]*): .*)] /gi
+
+const moderatorUserModes = ['~', '&', '@', '%']
+const moderatorHostnames = [
+  'admin.fuelrats.com',
+  'netadmin.fuelrats.com'
+]
 
 const options = {
   userName: 'bot',
@@ -22,7 +29,25 @@ const options = {
 
 try {
   const client = new irc.Client(config.irc.server, config.irc.nickname, options)
+
+  client.isModerator = function (channel, message)  {
+    let hasAdminHostname = moderatorHostnames.some(h => h === message.host)
+
+    let umode = this.getUserModeSymbol (channel, message.nick)
+    let hasAdminUserMode = moderatorUserModes.some(u => u === umode)
+
+    return Boolean(hasAdminHostname || hasAdminUserMode)
+  }
+
+  client.getUserModeSymbol = function (channel, nickname) {
+    if (!this.chans[channel]) {
+      return null
+    }
+    return this.chans[channel].users[nickname]
+  }
+
   new ChannelGuard(client)
+  new FetchIP(client)
 
   client.addListener('error', (message) => {
     console.log('error: ', message)
@@ -30,7 +55,7 @@ try {
 
   client.addListener('raw', (message) => {
     let [ sender, msg ] = message.args
-    console.log(sender, msg)
+    console.log(sender, msg, message)
   })
 
 

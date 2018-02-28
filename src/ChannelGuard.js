@@ -3,11 +3,6 @@ import Mutes from './classes/Mutes'
 
 const users = {}
 
-const moderatorUserModes = ['~', '&', '@', '%']
-const moderatorHostnames = [
-  'admin.fuelrats.com',
-  'netadmin.fuelrats.com'
-]
 
 const TIMEOUT_LENGTH = 5 * 60 * 1000 // 5 minutes
 
@@ -23,7 +18,7 @@ export default class ChannelGuard {
   onMessage (sender, channel, text, message) {
     let voiced = false
 
-    let isMod = isModerator(this.client, channel, message)
+    let isMod = this.client.isModerator(channel, message)
     if (isMod) {
       if (text.startsWith('!unmute')) {
         this.unmute(sender, channel, text, message)
@@ -41,7 +36,7 @@ export default class ChannelGuard {
 
     let userMessageRate = users[channel][sender]
     if (!userMessageRate.check()) {
-      if (getUserModeSymbol(this.client, channel, sender) === '+') {
+      if (this.client.getUserModeSymbol(channel, sender) === '+') {
         voiced = true
         this.client.send('MODE', channel, '-v', sender)
       }
@@ -90,20 +85,4 @@ export default class ChannelGuard {
     this.client.send('MODE', channel, '-b', `~q:*!*@${mute.host}`)
     this.client.notice(sender, `Removing mute for user ${unmuteName}`)
   }
-}
-
-function isModerator (client, channel, message) {
-  let hasAdminHostname = moderatorHostnames.some(h => h === message.host)
-
-  let umode = getUserModeSymbol (client, channel, message.nick)
-  let hasAdminUserMode = moderatorUserModes.some(u => u === umode)
-
-  return Boolean(hasAdminHostname || hasAdminUserMode)
-}
-
-function getUserModeSymbol(client, channel, nickname) {
-  if (!client.chans[channel]) {
-    return null
-  }
-  return client.chans[channel].users[nickname]
 }
