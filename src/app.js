@@ -1,4 +1,6 @@
 import irc from  'irc'
+import ChannelGuard from './ChannelGuard'
+
 const config = require('../config')
 
 const spamfilterMatch = /\[Spamfilter\] ([A-Za-z0-9_´\[\]]*)!([A-Za-z0-9_´\[\]]*)@([A-Za-z0-9._\-]*) matches filter '(.*)': \[([A-Za-z0-9]* ([A-Za-z0-9#_`\[\]]*): .*)] /gi
@@ -14,11 +16,14 @@ const options = {
   floodProtection: false,
   messageSplit: 512,
   secure: true,
-  password: config.irc.password
+  password: config.irc.password,
+  channels: ['#ratchat', '#doersofstuff', '#drillrats', '#drillrats2', '#drillrats3']
 }
 
 try {
   const client = new irc.Client(config.irc.server, 'WatchDog[BOT]', options)
+  new ChannelGuard(client)
+
   client.addListener('error', (message) => {
     console.log('error: ', message)
   })

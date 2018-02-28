@@ -1205,6 +1205,10 @@ flagged-respawn@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/flagged-respawn/-/flagged-respawn-1.0.0.tgz#4e79ae9b2eb38bf86b3bb56bf3e0a56aa5fcabd7"
 
+flood-protection@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/flood-protection/-/flood-protection-1.0.1.tgz#61698106f9100abb20e1207d2561a44c704b08b8"
+
 for-in@^1.0.1, for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
