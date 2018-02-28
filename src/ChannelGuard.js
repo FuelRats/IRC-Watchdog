@@ -34,6 +34,11 @@ export default class ChannelGuard {
       this.client.say('#opers', `KILLED ${sender} (${message.host}) has been automatically killed for posting harmful unicode characters in ${channel}`)
     }
 
+    let highlightCount = getHighlightCountForMessage(this.client, channel, text)
+    if (highlightCount >= 4) {
+      this.client.send('KILL', sender, killMessage)
+      this.client.say('#opers', `KILLED ${sender} (${message.host}) has been automatically killed for highlight spam in ${channel}`)
+    }
 
     if (!users[channel]) {
       users[channel] = {}
@@ -94,4 +99,20 @@ export default class ChannelGuard {
     this.client.send('MODE', channel, '-b', `~q:*!*@${mute.host}`)
     this.client.notice(sender, `Removing mute for user ${unmuteName}`)
   }
+}
+
+function getHighlightCountForMessage (client, channel, text) {
+  if (!client.chans[channel]) {
+    return 0
+  }
+
+  let userlist = Object.keys(client.chans[channel].users)
+
+  return text.split(' ').reduce((acc, word) => {
+    if (userlist.includes(word)) {
+      console.log(word)
+      acc += 1
+    }
+    return acc
+  }, 0)
 }
