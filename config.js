@@ -1,4 +1,4 @@
-const defaultChannels = ['#ratchat', '#doersofstuff', '#drillrats', '#drillrats2', '#drillrats3']
+const defaultChannels = ['#ratchat', '#doersofstuff', '#drillrats', '#drillrats2', '#drillrats3', '#rat-ops']
 let channels = process.env.FRWATCHDOG_IRC_CHANNELS
 
 if (!channels) {
