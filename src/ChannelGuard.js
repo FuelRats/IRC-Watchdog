@@ -1,5 +1,8 @@
 import FloodProtection from 'flood-protection'
 import Mutes from './classes/Mutes'
+import { isZalgo }  from 'unzalgo'
+
+const killMessage = `You must not attempt to disrupt the IRC servers, services or the servers they run on, including but not limited to DDoS attacks, attempts to gain privileges, flooding or otherwise interfering with the service(s).`
 
 const users = {}
 
@@ -25,6 +28,12 @@ export default class ChannelGuard {
       }
       return
     }
+
+    if (isZalgo(text)) {
+      this.client.send('KILL', sender, killMessage)
+      this.client.say('#opers', `KILLED ${sender} (${message.host}) has been automatically killed for posting harmful unicode characters in ${channel}`)
+    }
+
 
     if (!users[channel]) {
       users[channel] = {}
