@@ -7,6 +7,13 @@ if (!channels) {
   channels = channels.split(',')
 }
 
+let numbers = process.env.FRWATCHDOG_NEXMO_NUMBERS
+if (!numbers) {
+  numbers = []
+} else {
+  numbers = numbers.split(',')
+}
+
 module.exports = {
   irc: {
     server: process.env.FRWATCHDOG_IRC_SERVER || 'irc.fuelrats.com',
@@ -14,5 +21,11 @@ module.exports = {
     nickname: process.env.FRWATCHDOG_IRC_NICKNAME || 'FIDO',
     password: process.env.FRWATCHDOG_IRC_PASSWORD,
     channels: channels
+  },
+
+  nexmo: {
+    key: process.env.FRWATCHDOG_NEXMO_KEY,
+    secret: process.env.FRWATCHDOG_NEXMO_SECRET,
+    numbers: numbers
   }
 }

@@ -1,6 +1,7 @@
 import irc from  'irc'
 import ChannelGuard from './ChannelGuard'
 import FetchIP from './FetchIP'
+import Nexmo from 'nexmo'
 
 const config = require('../config')
 
@@ -30,6 +31,23 @@ const options = {
 try {
   const client = new irc.Client(config.irc.server, config.irc.nickname, options)
 
+  client.nexmo = new Nexmo({
+    apiKey: config.nexmo.key,
+    apiSecret: config.nexmo.secret
+  })
+
+  client.textNotification = function (message) {
+    for (let number of config.nexmo.numbers) {
+      client.nexmo.message.sendSms('The Fuel Rats', number, message, {}, function (error, response) {
+        if (error) {
+          console.log('NEXMO Error', error)
+        } else {
+          console.log('NEXMO', response)
+        }
+      })
+    }
+  }
+
   client.isModerator = function (channel, message)  {
     let hasAdminHostname = moderatorHostnames.some(h => h === message.host)
 
@@ -38,6 +56,7 @@ try {
 
     return Boolean(hasAdminHostname || hasAdminUserMode)
   }
+
 
   client.getUserModeSymbol = function (channel, nickname) {
     if (!this.chans[channel]) {
@@ -67,6 +86,7 @@ try {
 
         if (filter === '*opsignal*' || filter === '*opssignal*') {
           client.say('#opers', `${irc.colors.wrap('red', 'OPSIGNAL')} by ${nick} in channel/query ${target}. Original message: "${message}"`)
+          client.textNotification(`OPSIGNAL by ${nick} in channel/query ${target}. Original message: ${message}`)
         } else {
           client.say('#opers', `${irc.colors.wrap('red', 'SPAMFILTER')} triggered by ${nick} in channel/query ${target}.`)
         }
