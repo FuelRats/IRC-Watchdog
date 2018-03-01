@@ -35,7 +35,7 @@ export default class ChannelGuard {
     }
 
     let highlightCount = getHighlightCountForMessage(this.client, channel, text)
-    if (highlightCount >= 4) {
+    if (highlightCount >= 5) {
       this.client.send('KILL', sender, killMessage)
       this.client.say('#opers', `KILLED ${sender} (${message.host}) has been automatically killed for highlight spam in ${channel}`)
     }
