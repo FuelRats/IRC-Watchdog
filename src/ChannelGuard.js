@@ -45,7 +45,7 @@ export default class ChannelGuard {
     }
 
     if (!users[channel][sender]) {
-      users[channel][sender] = new FloodProtection({ rate: 3, per: 5 })
+      users[channel][sender] = new FloodProtection({ rate: 3, per: 6 })
     }
 
     let userMessageRate = users[channel][sender]
