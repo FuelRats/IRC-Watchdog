@@ -5,7 +5,7 @@ import Nexmo from 'nexmo'
 
 const config = require('../config')
 
-const spamfilterMatch = /\[Spamfilter\] ([A-Za-z0-9_´\[\]]*)!([A-Za-z0-9_´\[\]]*)@([A-Za-z0-9._\-]*) matches filter '(.*)': \[([A-Za-z0-9]* ([A-Za-z0-9#_`\[\]]*): .*)] /gi
+const spamfilterMatch = /\[Spamfilter\] ([A-Za-z0-9_´|\[\]]*)!([A-Za-z0-9_´|\[\]]*)@([A-Za-z0-9._\-]*) matches filter '(.*)': \[([A-Za-z0-9]* ([A-Za-z0-9#_`\[\]]*): .*)] /gi
 
 const moderatorUserModes = ['~', '&', '@', '%']
 const moderatorHostnames = [
@@ -38,7 +38,7 @@ try {
 
   client.textNotification = function (message) {
     for (let number of config.nexmo.numbers) {
-      client.nexmo.message.sendSms('The Fuel Rats', number, message, {}, function (error, response) {
+      client.nexmo.message.sendSms('FuelRats', number, message, {}, function (error, response) {
         if (error) {
           console.log('NEXMO Error', error)
         } else {

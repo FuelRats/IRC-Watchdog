@@ -56,6 +56,7 @@ export default class ChannelGuard {
       }
 
       this.client.send('MODE', channel, '+b', `~q:*!*@${message.host}`)
+      this.client.say('#rat-ops', `MUTED ${sender} (${message.host}) has been muted for flooding in ${channel}`)
       this.client.say(sender, `You have been automatically muted in ${channel} for 5 minutes due to too many messages in a short period of time.`)
 
       let timer = setTimeout(() => {
@@ -80,7 +81,7 @@ export default class ChannelGuard {
   }
 
   unmute (sender, channel, text, message) {
-    let getUnmuteParameters = /!unmute ([A-Za-z0-9_´\[\]]*)/gi
+    let getUnmuteParameters = /!unmute ([A-Za-z0-9_´|\[\]]*)/gi
     let [, unmuteName] = getUnmuteParameters.exec(text)
 
     if (!unmuteName) {
