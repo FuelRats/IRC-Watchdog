@@ -1,4 +1,6 @@
 import irc from  'irc'
+import fs from 'fs'
+import tls from 'tls'
 import ChannelGuard from './ChannelGuard'
 import FetchIP from './FetchIP'
 import SessionTracker from './SessionTracker'
@@ -18,6 +20,12 @@ const moderatorHostnames = [
   'netadmin.fuelrats.com'
 ]
 
+let secureContext = tls.createSecureContext({
+  key:   fs.readFileSync('ssl/client.pem'),
+  cert:  fs.readFileSync('ssl/client.pem'),
+  requestCert: true
+})
+
 const options = {
   userName: 'bot',
   realName: 'Fuel (Rats) Inspection and Defense Operations',
@@ -25,11 +33,9 @@ const options = {
   autoConnect: true,
   autoRejoin: true,
   selfSigned: true,
-  certExpired: true,
   floodProtection: false,
   messageSplit: 512,
-  secure: true,
-  password: config.irc.password,
+  secure: secureContext,
   channels: config.irc.channels
 }
 
