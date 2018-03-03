@@ -31,13 +31,13 @@ export default class ChannelGuard {
 
     if (isZalgo(text)) {
       this.client.send('KILL', sender, killMessage)
-      this.client.say('#opers', `KILLED ${sender} (${message.host}) has been automatically killed for posting harmful unicode characters in ${channel}`)
+      this.client.say(global.OPER_CHANNEL, `KILLED ${sender} (${message.host}) has been automatically killed for posting harmful unicode characters in ${channel}`)
     }
 
     let highlightCount = getHighlightCountForMessage(this.client, channel, text)
     if (highlightCount >= 5) {
       this.client.send('KILL', sender, killMessage)
-      this.client.say('#opers', `KILLED ${sender} (${message.host}) has been automatically killed for highlight spam in ${channel}`)
+      this.client.say(global.OPER_CHANNEL, `KILLED ${sender} (${message.host}) has been automatically killed for highlight spam in ${channel}`)
     }
 
     if (!users[channel]) {
@@ -56,7 +56,7 @@ export default class ChannelGuard {
       }
 
       this.client.send('MODE', channel, '+b', `~q:*!*@${message.host}`)
-      this.client.say('#rat-ops', `MUTED ${sender} (${message.host}) has been muted for flooding in ${channel}`)
+      this.client.say(global.OPER_CHANNEL, `MUTED ${sender} (${message.host}) has been muted for flooding in ${channel}`)
       this.client.say(sender, `You have been automatically muted in ${channel} for 5 minutes due to too many messages in a short period of time.`)
 
       let timer = setTimeout(() => {

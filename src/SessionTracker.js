@@ -46,7 +46,7 @@ export default class SessionTracker {
       }
       let names = previousSessions.map((session) => session.nickname)
 
-      this.client.say('#xlexiousdev', `${irc.colors.wrap('light_red', 'CLONES ')} ${nickname} has connected from ${ip}. Previous names: ${names.join(', ')}`)
+      this.client.say(global.OPER_CHANNEL, `${irc.colors.wrap('light_red', 'CLONES ')} ${nickname} has connected from ${ip}. Previous names: ${names.join(', ')}`)
 
       this.addresses[ip] = this.addresses[ip].map((session) => {
         session.used = true

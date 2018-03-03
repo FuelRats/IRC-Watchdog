@@ -6,6 +6,8 @@ import FetchIP from './FetchIP'
 import SessionTracker from './SessionTracker'
 import Nexmo from 'nexmo'
 
+global.OPER_CHANNEL = '#opers'
+
 const config = require('../config')
 
 const spamfilterMatch = /\[Spamfilter\] ([A-Za-z0-9_´|\[\]]*)!([A-Za-z0-9_´|\[\]]*)@([A-Za-z0-9._\-]*) matches filter '(.*)': \[([A-Za-z0-9]* ([A-Za-z0-9#_`\[\]]*): .*)] /gi
@@ -101,10 +103,10 @@ try {
         let [capture, nick, user, host, filter, message, target] = spamMatch
 
         if (filter === '*opsignal*' || filter === '*opssignal*') {
-          client.say('#opers', `${irc.colors.wrap('light_red', 'OPSIGNAL')} by ${nick} in channel/query ${target}. Original message: "${message}"`)
+          client.say(global.OPER_CHANNEL, `${irc.colors.wrap('light_red', 'OPSIGNAL')} by ${nick} in channel/query ${target}. Original message: "${message}"`)
           client.textNotification(`OPSIGNAL by ${nick} in channel/query ${target}. Original message: ${message}`)
         } else {
-          client.say('#opers', `${irc.colors.wrap('light_red', 'SPAMFILTER')} triggered by ${nick} in channel/query ${target}.`)
+          client.say(global.OPER_CHANNEL, `${irc.colors.wrap('light_red', 'SPAMFILTER')} triggered by ${nick} in channel/query ${target}.`)
         }
       }
       spamfilterMatch.lastIndex = 0
@@ -112,35 +114,35 @@ try {
       let killMatches = killMatch.exec(text)
       if (killMatches) {
         let [capture, nick, user, host, sender, message] = killMatches
-        client.say('#opers', `${irc.colors.wrap('light_red', 'KILL')} ${nick} (${host}) was killed by ${sender} with message: ${message}`)
+        client.say(global.OPER_CHANNEL, `${irc.colors.wrap('light_red', 'KILL')} ${nick} (${host}) was killed by ${sender} with message: ${message}`)
       }
       killMatch.lastIndex = 0
 
       let operServMatches = operServMatch.exec(text)
       if (operServMatches) {
         let [capture, message] = operServMatches
-        client.say('#opers', `${irc.colors.wrap('light_red', 'OperServ')} ${message}`)
+        client.say(global.OPER_CHANNEL, `${irc.colors.wrap('light_red', 'OperServ')} ${message}`)
       }
       operServMatch.lastIndex = 0
 
       let expireMatches = expireMatch.exec(text)
       if (expireMatches) {
         let [capture, message] = expireMatches
-        client.say('#opers', `${irc.colors.wrap('light_red', 'Expiring')} ${message}`)
+        client.say(global.OPER_CHANNEL, `${irc.colors.wrap('light_red', 'Expiring')} ${message}`)
       }
       expireMatch.lastIndex = 0
 
       let banMatches = banMatch.exec(text)
       if (banMatches) {
         let [message] = banMatches
-        client.say('#opers', `${irc.colors.wrap('light_red', 'NETWORK BAN')} ${message}`)
+        client.say(global.OPER_CHANNEL, `${irc.colors.wrap('light_red', 'NETWORK BAN')} ${message}`)
       }
       expireMatch.lastIndex = 0
 
       let failedOperMatches = failedOper.exec(text)
       if (failedOperMatches) {
         let [message] = failedOperMatches
-        client.say('#opers', `${irc.colors.wrap('light_red', 'OPER FAILED')} ${message}`)
+        client.say(global.OPER_CHANNEL, `${irc.colors.wrap('light_red', 'OPER FAILED')} ${message}`)
       }
       failedOper.lastIndex = 0
     }
