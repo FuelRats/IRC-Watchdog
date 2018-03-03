@@ -44,7 +44,7 @@ export default class SessionTracker {
       }
       let names = previousSessions.map((session) => session.nickname)
 
-      this.client.say('#xlexiousdev', `${irc.colors.wrap('red', 'CLONES ')} ${nickname} has connected from ${ip}. Previous names: ${names.join(', ')}`)
+      this.client.say('#opers', `${irc.colors.wrap('red', 'CLONES ')} ${nickname} has connected from ${ip}. Previous names: ${names.join(', ')}`)
     }
     clientConnecting.lastIndex = 0
   }
