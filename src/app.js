@@ -1,6 +1,7 @@
 import irc from  'irc'
 import ChannelGuard from './ChannelGuard'
 import FetchIP from './FetchIP'
+import SessionTracker from './SessionTracker'
 import Nexmo from 'nexmo'
 
 const config = require('../config')
@@ -9,7 +10,7 @@ const spamfilterMatch = /\[Spamfilter\] ([A-Za-z0-9_´|\[\]]*)!([A-Za-z0-9_´|\[
 const killMatch = /Received KILL message for ([A-Za-z0-9_´|\[\]]*)!([A-Za-z0-9_´|\[\]]*)@([A-Za-z0-9._\-]*) from ([A-Za-z0-9_´|\[\]]*) Path: [A-Za-z0-9._\-]*![A-Za-z0-9_´|\[\]]* \((.*)\)$/gi
 const operServMatch = /from OperServ: (.*)/gi
 const expireMatch = /(Expiring Global [A-Z]*:Line .*)/gi
-const banMatch = /(Global [A-Z]*:line .*)/gi
+const banMatch = /(Global [A-Z]*:line added .*)/gi
 
 const moderatorUserModes = ['~', '&', '@', '%']
 const moderatorHostnames = [
@@ -71,6 +72,7 @@ try {
 
   new ChannelGuard(client)
   new FetchIP(client)
+  new SessionTracker(client)
 
   client.addListener('error', (message) => {
     console.log('error: ', message)
