@@ -1,4 +1,5 @@
-import irc from "irc"
+import irc from 'irc'
+import levenshtein from 'fast-levenshtein'
 
 const clientConnecting = /Client connecting: ([A-Za-z0-9_´|\[\]]*) \(([A-Za-z0-9_´|\[\]]*)@([A-Za-z0-9._\-]*)\) \[([0-9.:A-F-a-f]*)\]/gi
 const clientExiting = /Client exiting: ([A-Za-z0-9_´|\[\]]*) \(([A-Za-z0-9_´|\[\]]*)@([A-Za-z0-9._\-]*)\) \[([0-9.:A-F-a-f]*)\] \(.*\)$/gi
@@ -28,23 +29,29 @@ export default class SessionTracker {
         this.addresses[ip] = []
       }
 
-      let exists = this.addresses[ip].some((session) => session.nickname === nickname.toLowerCase())
+      let exists = this.addresses[ip].some((session) => session.nickname.toLowerCase() === nickname.toLowerCase())
 
       if (!exists) {
         this.addresses[ip].push({
-          nickname: nickname.toLowerCase(),
+          nickname: nickname,
           user,
-          host
+          host,
+          used: false
         })
       }
 
-      let previousSessions = this.addresses[ip].filter((session) => session.nickname !== nickname.toLowerCase())
+      let previousSessions = this.addresses[ip].filter((session) => levenshtein.get(session.nickname.toLowerCase(), nickname.toLowerCase()) >= 4 && session.used === false)
       if (previousSessions.length === 0) {
         return
       }
       let names = previousSessions.map((session) => session.nickname)
 
-      this.client.say('#opers', `${irc.colors.wrap('light_red', 'CLONES ')} ${nickname} has connected from ${ip}. Previous names: ${names.join(', ')}`)
+      this.client.say('#xlexiousdev', `${irc.colors.wrap('light_red', 'CLONES ')} ${nickname} has connected from ${ip}. Previous names: ${names.join(', ')}`)
+
+      this.addresses[ip] = this.addresses[ip].map((session) => {
+        session.used = true
+        return session
+      })
     }
     clientConnecting.lastIndex = 0
   }
