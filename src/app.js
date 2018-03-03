@@ -21,11 +21,11 @@ const moderatorHostnames = [
   'netadmin.fuelrats.com'
 ]
 
-let secureContext = tls.createSecureContext({
+let secureContext = {
   key:   fs.readFileSync('ssl/client.pem'),
   cert:  fs.readFileSync('ssl/client.pem'),
   requestCert: true
-})
+}
 
 const options = {
   userName: 'bot',
@@ -88,6 +88,10 @@ try {
   client.addListener('raw', (message) => {
     let [ sender, msg ] = message.args
     console.log(sender, msg, message)
+  })
+
+  client.addListener('registered', () => {
+    client.send('OPER', 'watchdog')
   })
 
   client.addListener('notice', (sender, receiver, text) => {
