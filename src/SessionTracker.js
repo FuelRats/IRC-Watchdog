@@ -28,17 +28,17 @@ export default class SessionTracker {
         this.addresses[ip] = []
       }
 
-      let exists = this.addresses[ip].some((session) => session.nickname === nickname)
+      let exists = this.addresses[ip].some((session) => session.nickname === nickname.toLowerCase())
 
       if (!exists) {
         this.addresses[ip].push({
-          nickname,
+          nickname: nickname.toLowerCase(),
           user,
           host
         })
       }
 
-      let previousSessions = this.addresses[ip].filter((session) => session.nickname !== nickname)
+      let previousSessions = this.addresses[ip].filter((session) => session.nickname !== nickname.toLowerCase())
       if (previousSessions.length === 0) {
         return
       }
