@@ -35,10 +35,20 @@ export default class FetchIP {
       try {
         let data = JSON.parse(body)
 
-        this.client.say(channel, `IP Information ${data.ip}: ${data.city}, ${data.region}, ${data.country} ${emojiFlags.countryCode(data.country).emoji} ISP: ${data.org}`)
+        this.client.say(channel, `IP Information ${data.ip}: ${prettyPrint(data)} ${emojiFlags.countryCode(data.country).emoji} ISP: ${data.org}`)
       } catch (ex) {
         this.client.notice(sender, 'Unable to parse IP information')
       }
     })
+  }
+}
+
+function prettyPrint(data) {
+  if (data.city) {
+    return `${data.city}, ${data.region}, ${data.country}`
+  } else if (data.region) {
+    return `${data.region}, ${data.country}`
+  } else {
+    return data.country
   }
 }
