@@ -13,6 +13,7 @@ const killMatch = /Received KILL message for ([A-Za-z0-9_´|\[\]]*)!([A-Za-z0-9_
 const operServMatch = /from OperServ: (.*)/gi
 const expireMatch = /(Expiring Global [A-Z]*:Line .*)/gi
 const banMatch = /(Global [A-Z]*:line added .*)/gi
+const failedOper = /Failed OPER attempt/gi
 
 const moderatorUserModes = ['~', '&', '@', '%']
 const moderatorHostnames = [
@@ -89,7 +90,6 @@ try {
     console.log(sender, msg, message)
   })
 
-
   client.addListener('notice', (sender, receiver, text) => {
     if (!sender) {
       let spamMatch = spamfilterMatch.exec(text)
@@ -132,6 +132,13 @@ try {
         client.say('#opers', `${irc.colors.wrap('light_red', 'NETWORK BAN ')} ${message}`)
       }
       expireMatch.lastIndex = 0
+
+      let failedOperMatches = failedOper.exec(text)
+      if (failedOperMatches) {
+        let [message] = failedOperMatches
+        client.say('#opers', `${irc.colors.wrap('light_red', 'OPER FAILED')} ${message}`)
+      }
+      failedOper.lastIndex = 0
     }
   })
 } catch (ex) {
