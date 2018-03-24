@@ -123,6 +123,9 @@ try {
       let operServMatches = operServMatch.exec(text)
       if (operServMatches) {
         let [capture, message] = operServMatches
+        if (message.includes('now an IRC operator')) {
+          return
+        }
         client.say(global.OPER_CHANNEL, `${irc.colors.wrap('light_red', 'OperServ')} ${message}`)
       }
       operServMatch.lastIndex = 0
