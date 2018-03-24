@@ -45,10 +45,12 @@ const options = {
 try {
   const client = new irc.Client(config.irc.server, config.irc.nickname, options)
 
-  client.nexmo = new Nexmo({
-    apiKey: config.nexmo.key,
-    apiSecret: config.nexmo.secret
-  })
+  if (config.nexmo.key) {
+    client.nexmo = new Nexmo({
+      apiKey: config.nexmo.key,
+      apiSecret: config.nexmo.secret
+    })
+  }
 
   client.textNotification = function (message) {
     for (let number of config.nexmo.numbers) {
