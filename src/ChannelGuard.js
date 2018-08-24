@@ -108,10 +108,11 @@ function getHighlightCountForMessage (client, channel, text) {
   }
 
   let userlist = Object.keys(client.chans[channel].users)
+  let duplicates = []
 
   return text.split(' ').reduce((acc, word) => {
-    if (userlist.includes(word)) {
-      console.log(word)
+    if (userlist.includes(word) && duplicates.includes(word) === false) {
+      duplicates.push(word)
       acc += 1
     }
     return acc
